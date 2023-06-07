@@ -25,7 +25,7 @@ namespace PsudoCodeGen
         public static string GetStringReport(string csCodeFilePath)
         {
             var classes = Extract(csCodeFilePath);
-            List<string> lines = GenerateReport(classes);
+            List<string> lines = GenerateReport(classes,false);
             return PrintListToString(lines);
         }
         #region helper functions
@@ -70,35 +70,39 @@ namespace PsudoCodeGen
             }
             return classes;
         }
-        public static List<string> GenerateReport(Dictionary<string, ClassInfo> classes,bool showType=true)
+        public static List<string> GenerateReport(Dictionary<string, ClassInfo> classes,bool showTheType=true)
         {
             List<string> lines =new List<string>() ;
             string s = "";
             foreach (var classInfo in classes.Values)
             {
-                s=(showType)?$"Class:":"";
-                lines.Add(s+"{classInfo.Name}" );
+                s=(showTheType)?$"Class:":"";
+                lines.Add(s+$"{classInfo.Name}" );
 
                 if (!String.IsNullOrWhiteSpace(classInfo.Comments))
                 {
-                    s = (showType) ? $"Comments:" : "";
-                    lines.Add(s + "{classInfo.Comments}");
+                    s = (showTheType) ? $"Comments:" : "";
+                    lines.Add(s + $"{classInfo.Comments}");
                 }
-                //s = (showType) ? "Properties:" :"";
-                //lines.Add(s);
 
                 foreach (var property in classInfo.Properties)
                 {
-                    lines.Add( $"       Property: {property.Name} ({property.Type})");
+                    s = (showTheType) ? "Property :" : "";
+                    lines.Add( $"       "+s+$"{property.Name} ({property.Type})");
+
                     if (!String.IsNullOrWhiteSpace(property.Comments))
-                        lines.Add( $"       Property Comments: {property.Comments}");
+                    {
+                        s = (showTheType) ? "Property Comments: " : "";
+                        lines.Add($"       "+s+$"{property.Comments}");
+                    }
                 }
 
-                //lines.Add("Methods:");
                 foreach (var method in classInfo.Methods)
                 {
-                    lines.Add($"        Method : {method.Name} ({method.ReturnType})");
-                    lines.Add($"        Method Comments: {method.Comments}");
+                    s = (showTheType) ? "Method : " : "";
+                    lines.Add($"        "+s+$"{method.Name} ({method.ReturnType})");
+                    s = (showTheType) ? "Method Comments: " : "";
+                    lines.Add($"        "+s+$" {method.Comments}");
                 }
             }
             return lines;
