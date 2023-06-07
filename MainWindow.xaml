@@ -1,0 +1,36 @@
+﻿<Window x:Class="PsudoCodeGen.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PsudoCodeGen"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <StackPanel>
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Row="0" Grid.Column="0"
+                    x:Name="SelectFileButton" 
+                     Content="Select File" 
+                     Click="SelectFileButton_Click"
+                       >
+                </Button>
+
+                <TextBox Grid.Row="0"  Grid.Column="1" 
+                   Name="lblSelectedFile" />
+            </Grid>
+            <ScrollViewer>
+                <TextBlock  Grid.Row="2"
+                        Name="txtOutput"
+                       TextWrapping="Wrap" 
+                        Text="TextBlock" 
+                        Height="367" />
+            </ScrollViewer>
+
+        </StackPanel>
+    </Grid>
+</Window>
