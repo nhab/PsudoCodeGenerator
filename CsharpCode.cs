@@ -25,7 +25,7 @@ namespace PsudoCodeGen
         public static string GetStringReport(string csCodeFilePath)
         {
             var classes = Extract(csCodeFilePath);
-            List<string> lines = GenerateReport(classes,false);
+            List<string> lines = GenerateReport(classes,true);
             return PrintListToString(lines);
         }
         #region helper functions
@@ -81,7 +81,7 @@ namespace PsudoCodeGen
 
                 if (!String.IsNullOrWhiteSpace(classInfo.Comments))
                 {
-                    s = (showTheType) ? $"Comments:" : "";
+                    s = (showTheType && !string.IsNullOrEmpty( classInfo.Comments)) ? $"Comments:" : "";
                     lines.Add(s + $"{classInfo.Comments}");
                 }
 
@@ -92,7 +92,7 @@ namespace PsudoCodeGen
 
                     if (!String.IsNullOrWhiteSpace(property.Comments))
                     {
-                        s = (showTheType) ? "Property Comments: " : "";
+                        s = (showTheType && !string.IsNullOrEmpty( property.Comments)) ? "Property Comments: " : "";
                         lines.Add($"       "+s+$"{property.Comments}");
                     }
                 }
@@ -101,7 +101,8 @@ namespace PsudoCodeGen
                 {
                     s = (showTheType) ? "Method : " : "";
                     lines.Add($"        "+s+$"{method.Name} ({method.ReturnType})");
-                    s = (showTheType) ? "Method Comments: " : "";
+                    
+                    s = (showTheType && !String.IsNullOrWhiteSpace( method.Comments)) ? "Method Comments: " : "";
                     lines.Add($"        "+s+$" {method.Comments}");
                 }
             }
