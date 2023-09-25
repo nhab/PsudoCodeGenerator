@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using PropertyInfo = PsudoCodeGen.Models.PropertyInfo;
 using MethodInfo = PsudoCodeGen.Models.MethodInfo;
+using Microsoft.CodeAnalysis.VisualBasic;
 
 namespace PsudoCodeGen
 {
@@ -20,21 +21,34 @@ namespace PsudoCodeGen
         /// <summary>
         ///
         /// </summary>
-        /// <param name="csCodeFilePath"></param>
+        /// <param name="CodeFilePath"></param>
         /// <returns></returns>
-        public static string GetStringReport(string csCodeFilePath)
+        public static string GetStringReport(string CodeFilePath)
         {
-            var classes = Extract(csCodeFilePath);
+            var classes = Extract(CodeFilePath);
             List<string> lines = GenerateReport(classes,true);
             return PrintListToString(lines);
         }
         #region helper functions
-        public static Dictionary<string, ClassInfo> Extract(string csCodeFilePath)
+        public static Dictionary<string, ClassInfo> Extract(string CodeFilePath)
         {
-            string code                   = File.ReadAllText(csCodeFilePath);
-            SyntaxTree syntaxTree         = CSharpSyntaxTree.ParseText(code);
-            CSharpCompilation compilation = CSharpCompilation.Create("MyCompilation", syntaxTrees: new[] { syntaxTree });
-            SyntaxNode root               = syntaxTree.GetRoot();
+            string code              = File.ReadAllText(CodeFilePath);
+            SyntaxTree syntaxTree    = null;
+          
+            if(CodeFilePath.EndsWith("cs"))
+             {
+                 syntaxTree =  CSharpSyntaxTree.ParseText(code);
+                 CSharpCompilation compilation = CSharpCompilation.Create("MyCompilation", syntaxTrees: new[] { syntaxTree });
+            }
+            else
+            {
+                if (CodeFilePath.EndsWith("vb"))
+                {
+                    syntaxTree = VisualBasicSyntaxTree.ParseText(code);
+                    VisualBasicCompilation compilation= VisualBasicCompilation.Create("MyCompilation", syntaxTrees: new[] { syntaxTree });
+                }
+            }
+            SyntaxNode root = syntaxTree.GetRoot();
 
             Dictionary<string, ClassInfo> classes = new Dictionary<string, ClassInfo>();
             foreach (var node in root.DescendantNodes())
